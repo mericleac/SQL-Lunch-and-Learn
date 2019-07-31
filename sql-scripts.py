@@ -1,29 +1,26 @@
-import mysql.connector
+from pydal import DAL, Field
 
-cnx = mysql.connector.connect(user='root', password='root', host='localhost', database='sakila')
+db = DAL("mysql://root:root@localhost/sakila?set_encoding=utf8mb4", fake_migrate_all=True)
+
+db.define_table('film', Field('title'), Field('description'))
 
 films = ["BENEATH RUSH", "CADDYSHACK JEDI", "REUNION WITCHES", "VOLCANO TEXAS", "SWARM GOLD"]
 
 
 def query_in_a_loop():
-    query = ("SELECT title, description FROM film WHERE title = %s")
+    rows = []
     for film in films:
-        cursor = cnx.cursor()
-        cursor.execute(query, tuple([film]))
-        cursor.fetchone()
-        cursor.close()
+        film_row = db(db.film.title == film).select(db.film.title, db.film.description).first()
+        rows.append(film_row)
+    return rows
 
 
 def query_belongs():
-    query = ("SELECT title, description FROM film WHERE title IN %s")
-    cursor = cnx.cursor()
-    cursor.execute(query, tuple([tuple(films)]))
-    cursor.fetchall()
-    cursor.close()
+    film_rows = db(db.film.title.belongs(films)).select(db.film.title, db.film.description).first()
+    return film_rows
 
-import timeit
 
-query_in_a_loop()
-query_belongs()
-
-cnx.close()
+if __name__ == '__main__':
+    import timeit
+    print(timeit.timeit("query_in_a_loop()", setup="from __main__ import query_in_a_loop", number=10000))
+    print(timeit.timeit("query_belongs()", setup="from __main__ import query_belongs", number=10000))
