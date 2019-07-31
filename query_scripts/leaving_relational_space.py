@@ -32,6 +32,7 @@ def query_in_relational_space():
         db.film.title,
         db.film.description,
         db.film.rental_rate,
+        orderby=db.film.rental_rate
     )
 
     return film_rows
