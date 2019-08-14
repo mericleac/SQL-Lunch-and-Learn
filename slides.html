@@ -19,6 +19,18 @@
         vertical-align: middle;
         width: auto;
       }
+      .column:first-of-type {float:left}
+      .column:last-of-type {float:right}
+      .split-30 .column:first-of-type {width: 30%}
+      .split-30 .column:last-of-type {width: 70%}
+      .split-40 .column:first-of-type {width: 40%}
+      .split-40 .column:last-of-type {width: 60%}
+      .split-50 .column:first-of-type {width: 50%}
+      .split-50 .column:last-of-type {width: 50%}
+      .split-60 .column:first-of-type {width: 60%}
+      .split-60 .column:last-of-type {width: 40%}
+      .split-70 .column:first-of-type {width: 70%}
+      .split-70 .column:last-of-type {width: 30%}
     </style>
   </head>
   <body>
@@ -95,6 +107,65 @@ The parts of a select statement are:
 5. SELECT: Choosing which columns to return
 6. ORDER BY: Sorting for returned entries
 > This is the logical query processing flow and the order in which the server interprets any SELECT statement
+
+---
+
+class: center, middle
+
+# Do's and Don't's
+## Combining Queries (One slower queries is better than two slightly faster queries)
+
+---
+
+class: split-50
+
+.column[
+# Don't query in a loop
+```python
+def query_in_a_loop():
+    rows = []
+    for film in films:
+        film_row = db(
+            db.film.title == film
+        ).select(
+            db.film.title,
+            db.film.description
+        ).first()
+        rows.append(film_row)
+    return rows
+```
+> _Execution time: 17.12254_
+]
+.column[
+<br><br><br><br><br><br><br>
+```python
+def query_belongs():
+    film_rows = db(
+        db.film.title.belongs(films)
+    ).select(
+        db.film.title,
+        db.film.description
+    ).first()
+    return film_rows
+```
+> _Execution time: 4.48374_
+]
+
+---
+
+class: center, middle
+
+# Do's and Don't's
+## Avoiding Full Table Scans
+
+---
+
+class: center, middle
+
+# Do's and Don't's
+## Avoiding Full Table Scans
+## Define Reporting Requirements early
+
 ---
 
 # References
