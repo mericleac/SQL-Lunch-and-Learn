@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
+    <title>SQL Lunch and Learn</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Red+Hat+Display);
@@ -16,6 +16,7 @@
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', monospace; }
       .mermaid {
         text-align: center;
+        vertical-align: middle;
         width: auto;
       }
     </style>
@@ -55,13 +56,16 @@ class: center, middle
 2. SQL Query
 > _Declare_ what is needed
 3. Parser/Translator
-> Any syntax errors would be caught in this stage
+> Any syntax errors would be caught in this stage, also does Name resolutions, Type derivation, and aggregate binding
 4. Database Optimizer
-> The Optimizer generates several possible plans and chooses the best one using an interanl algorithm
-5. Implementation (Execution Plan)
-> The least expesive plan (considering I/O, CPU, and memory) is executed
+> The Optimizer generates several possible plans and chooses the best one using an internal algorithm
 
 ---
+
+<ol start="5">
+    <li>Implementation (Execution Plan)</li>
+</ol>
+> The least expensive plan (considering I/O, CPU, and memory) is executed
 
 <div class="mermaid">
   graph LR
@@ -83,8 +87,14 @@ class: center, middle
 ---
 
 # The **SELECT** Statement
-
-
+The parts of a select statement are:
+1. FROM: Which tables
+2. WHERE: Conditions on rows
+3. GROUP BY: Combining rows
+4. HAVING: filtering by conditions on that grouping
+5. SELECT: Choosing which columns to return
+6. ORDER BY: Sorting for returned entries
+> This is the logical query processing flow and the order in which the server interprets any SELECT statement
 ---
 
 # References
@@ -92,6 +102,7 @@ class: center, middle
 - Query Processing: https://www.geeksforgeeks.org/sql-query-processing/
 - SQL Performance and Planning: _The Art of SQL_ Stephane Faroult
 - The SQL Server Query Optimizer: https://hackernoon.com/how-does-the-sql-server-query-optimizer-works-47541e2205aa
+- Logical Query Processing Flow: https://www.itprotoday.com/sql-server/logical-query-processing-part-7-group-and-having
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
