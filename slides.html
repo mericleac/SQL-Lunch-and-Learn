@@ -14,6 +14,9 @@
         font-weight: normal;
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .mermaid {
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -33,12 +36,26 @@ class: center, middle
 
 ---
 
-# Introduction
+# Query Processing
+
+<div class="mermaid">
+  graph LR
+          subgraph client-side
+          A(Reporting Requirements)-->B
+          end
+          subgraph SQL-engine-side
+          B(SQL)-->C
+          C{Parser/Translator}-->D
+          D{Optimizer}-->E
+          E{Execution Plan}-->F{Execution Engine}
+          end
+</div>
 
     </textarea>
-    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
-    </script>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.3/mermaid.min.js"></script>
     <script>
+      mermaid.initialize({startOnLoad:true});
       var slideshow = remark.create();
     </script>
   </body>
