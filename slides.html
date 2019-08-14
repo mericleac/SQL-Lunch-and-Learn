@@ -16,6 +16,7 @@
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', monospace; }
       .mermaid {
         text-align: center;
+        width: auto;
       }
     </style>
   </head>
@@ -38,35 +39,44 @@ class: center, middle
 
 ---
 
-# Query Processing
-
-<div class="mermaid">
-  graph LR
-          subgraph client-side
-          A(Reporting Requirements)-->B
-          end
-          subgraph SQL-engine-side
-          B(SQL)-->C
-          C{Parser/Translator}-->D
-          D{Optimizer}-->E
-          E{Execution Plan}-->F{Execution Engine}
-          end
-</div>
 # What is SQL?
 
 **S**tructured **Q**uery **L**anguage is a declarative language used to communicate with a _relational_ database.
+- Operates on a relational Database
+> _Note_: Relational in this case refers to the table, row, column relation, not the relationship between tables!
+- Makes declarations about a relational structure but does not define how these actions should be executed
 
 ---
 
-# The Query Process
+# Query Processing
 
 1. Define Reporting Requirements
+> What data is required?
 2. SQL Query
-3. Relational Theory
+> _Declare_ what is needed
+3. Parser/Translator
+> Any syntax errors would be caught in this stage
 4. Database Optimizer
+> The Optimizer generates several possible plans and chooses the best one using an interanl algorithm
 5. Implementation (Execution Plan)
+> The least expesive plan (considering I/O, CPU, and memory) is executed
 
-_Probably insert a diagram here_
+---
+
+<div class="mermaid">
+  graph LR
+      subgraph client-side
+      A(Reporting<br>Requirements)-->B(SQL)
+      end
+</div>
+<div class="mermaid">
+  graph LR
+      subgraph SQL-engine-side
+      C{Parser/<br>Translator}-->D
+      D{Optimizer}-->E
+      E{Execution<br>Plan}-->F{Execution<br>Engine}
+      end
+</div>
 
 > The SQL Query describes _what_ should be retrieved, the optimizer will generate _how_ it should be retrieved
 
@@ -76,6 +86,12 @@ _Probably insert a diagram here_
 
 
 ---
+
+# References
+
+- Query Processing: https://www.geeksforgeeks.org/sql-query-processing/
+- SQL Performance and Planning: _The Art of SQL_ Stephane Faroult
+- The SQL Server Query Optimizer: https://hackernoon.com/how-does-the-sql-server-query-optimizer-works-47541e2205aa
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
