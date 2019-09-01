@@ -13,6 +13,10 @@
         font-family: 'Red Hat Display', sans-serif;
         font-weight: normal;
       }
+      .remark-slide-content {
+        background-image: url(Images/background.jpg);
+        background-size: cover;
+      }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', monospace; }
       .mermaid {
         text-align: center;
@@ -47,7 +51,7 @@ class: center, middle
 
 1. What is SQL? and the Query process
 2. Overview of the SELECT statement
-3. Do's and Don't's of Querying for Data
+3. Efficient Retrieval
 4. SQL Workbench, execution paths, and basic query tuning
 
 ---
@@ -112,7 +116,7 @@ The parts of a select statement are:
 
 class: center, middle
 
-# Do's and Don't's
+# Efficient Retrieval
 ## Combining Queries (One slower query is better than two slightly faster queries)
 
 ---
@@ -155,16 +159,39 @@ def query_belongs():
 
 class: center, middle
 
-# Do's and Don't's
+# Efficient Retrieval
 ## Avoiding Full Table Scans
 
 ---
 
 class: center, middle
 
-# Do's and Don't's
-## Avoiding Full Table Scans
+# Efficient Retrieval
 ## Define Reporting Requirements early
+
+---
+
+class: center, middle
+
+# Efficient Retrieval
+## Optimizations to the Database
+
+---
+
+# Indexes
+
+- Creating an index creates a new special lookup table and data structures that refers to the original table
+- Indexes can be created on any column (not only id!) but should only be created on columns that are frequently referenced in a query's WHERE clause and infrequently updated
+- Indexes speed up SELECTs (if used correctly), but can slow down INSERTs and UPDATEs
+- A doubly linked list is used to connect the index lookup table to the original table and a Binary Tree is used to quickly look up indexes
+
+---
+
+# Views 
+
+- Views are nothing more than a SQL statement stored in the DB, so there are no speed benefits in using them
+- Views instead allow us to store a common query and write permissions and business logic around it
+- Incorporating views into other queries can cause retrieval to be slow as it requires rerunning the stored SQL statement every time it is referenced
 
 ---
 
@@ -174,6 +201,7 @@ class: center, middle
 - SQL Performance and Planning: _The Art of SQL_ Stephane Faroult
 - The SQL Server Query Optimizer: https://hackernoon.com/how-does-the-sql-server-query-optimizer-works-47541e2205aa
 - Logical Query Processing Flow: https://www.itprotoday.com/sql-server/logical-query-processing-part-7-group-and-having
+- Background Image: <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by starline - www.freepik.com</a>
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
