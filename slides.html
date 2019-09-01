@@ -182,8 +182,11 @@ class: center, middle
 
 - Creating an index creates a new special lookup table and data structures that refers to the original table
 - Indexes can be created on any column (not only id!) but should only be created on columns that are frequently referenced in a query's WHERE clause and infrequently updated
-- Indexes speed up SELECTs (if used correctly), but can slow down INSERTs and UPDATEs
-- A doubly linked list is used to connect the index lookup table to the original table and a Binary Tree is used to quickly look up indexes
+- There are clustered and non clustered indexes, they are both represented with a Binary Tree structure
+- A clustered index stores the entire row and all the data (affects the sorting of the table as a whole) while a non clustered index stores a pointer to the data
+- A table can only have one clustered index (often the primary key)
+- Clustered indexes can speed up SELECTs (if used correctly), but can slow down INSERTs and UPDATEs (mostly clustered)
+- Non clustered indexes can also speed up SELECTs (if used correctly) but add overhead since they are their own data structure that must be stored
 
 ---
 
@@ -202,6 +205,7 @@ class: center, middle
 - The SQL Server Query Optimizer: https://hackernoon.com/how-does-the-sql-server-query-optimizer-works-47541e2205aa
 - Logical Query Processing Flow: https://www.itprotoday.com/sql-server/logical-query-processing-part-7-group-and-having
 - Background Image: <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by starline - www.freepik.com</a>
+- Clustered vs Non Clustered Indexes: https://www.youtube.com/watch?v=xeoLwQmTO4o&feature=youtu.be
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
