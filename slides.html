@@ -157,6 +157,62 @@ def query_belongs():
 
 ---
 
+
+class: split-50
+
+.column[
+# Using subqueries
+```python
+def using_a_list_of_ids():
+  film_ids = [
+    row.film_id for row in 
+    db(
+      db.film.rental_rate < 1.0
+    ).select(
+        db.film.film_id,
+    )
+  ]
+
+  film_rows = db(
+    db.film.rental_rate
+    .belongs(film_ids)
+  ).select(
+    db.film.title,
+    db.film.description,
+    db.film.rental_rate,
+    orderby=db.film.rental_rate
+  )
+  return film_rows
+```
+> _Execution time: 19.86860_
+]
+.column[
+<br><br><br><br><br><br><br>
+```python
+def using_a_subquery():
+    sub_query = db(
+      db.film.rental_rate < 1.0
+    )._select(
+      db.film.rental_rate
+    )
+
+    film_rows = db(
+      db.film.rental_rate
+      .belongs(sub_query)
+    ).select(
+      db.film.title,
+      db.film.description,
+      db.film.rental_rate,
+      orderby=db.film.rental_rate
+    )
+
+    return film_rows
+```
+> _Execution time: 17.17342_
+]
+
+---
+
 class: center, middle
 
 # Efficient Retrieval
