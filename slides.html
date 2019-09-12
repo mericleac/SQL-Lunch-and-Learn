@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SQL Lunch and Learn</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Red+Hat+Display);
+      @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Open Sans', sans-serif; }
+      h1, h2, h3 {
+        font-family: 'Red Hat Display', sans-serif;
+        font-weight: normal;
+      }
+      .remark-slide-content {
+        background-image: url(Images/background.jpg);
+        background-size: cover;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono', monospace; }
+      .mermaid {
+        text-align: center;
+        vertical-align: middle;
+        width: auto;
+      }
+      .column:first-of-type {float:left}
+      .column:last-of-type {float:right}
+      .split-30 .column:first-of-type {width: 30%}
+      .split-30 .column:last-of-type {width: 70%}
+      .split-40 .column:first-of-type {width: 40%}
+      .split-40 .column:last-of-type {width: 60%}
+      .split-50 .column:first-of-type {width: 50%}
+      .split-50 .column:last-of-type {width: 50%}
+      .split-60 .column:first-of-type {width: 60%}
+      .split-60 .column:last-of-type {width: 40%}
+      .split-70 .column:first-of-type {width: 70%}
+      .split-70 .column:last-of-type {width: 30%}
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# SQL Lunch and Learn
+## Mandy Mericle, 08/28/2019
+
+---
+
+# Overview
+
+1. What is SQL? and the Query process
+2. Overview of the SELECT statement
+3. Efficient Retrieval
+4. SQL Workbench, execution paths, and basic query tuning
+
+---
+
+# What is SQL?
+
+**S**tructured **Q**uery **L**anguage is a declarative language used to communicate with a _relational_ database.
+- Operates on a relational Database
+> _Note_: Relational in this case refers to the table, row, column relation, not the relationship between tables!
+- Makes declarations about a relational structure but does not define how these actions should be executed
+
+---
+
+# Query Processing
+
+1. Define Reporting Requirements
+> What data is required?
+2. SQL Query
+> _Declare_ what is needed
+3. Parser/Translator
+> Any syntax errors would be caught in this stage, also does Name resolutions, Type derivation, and aggregate binding
+4. Database Optimizer
+> The Optimizer generates several possible plans and chooses the best one using an internal algorithm
+
+---
+
+<ol start="5">
+    <li>Implementation (Execution Plan)</li>
+</ol>
+> The least expensive plan (considering I/O, CPU, and memory) is executed
+
+<div class="mermaid">
+  graph LR
+      subgraph client-side
+      A(Reporting<br>Requirements)-->B(SQL)
+      end
+</div>
+<div class="mermaid">
+  graph LR
+      subgraph SQL-engine-side
+      C{Parser/<br>Translator}-->D
+      D{Optimizer}-->E
+      E{Execution<br>Plan}-->F{Execution<br>Engine}
+      end
+</div>
+
+> The SQL Query describes _what_ should be retrieved, the optimizer will generate _how_ it should be retrieved
+
+---
+
+# The **SELECT** Statement
+The parts of a select statement are:
+1. FROM: Which tables
+2. WHERE: Conditions on rows
+3. GROUP BY: Combining rows
+4. HAVING: filtering by conditions on that grouping
+5. SELECT: Choosing which columns to return
+6. ORDER BY: Sorting for returned entries
+> This is the logical query processing flow and the order in which the server interprets any SELECT statement
+
+---
+
+class: center, middle
+
+# Efficient Retrieval
+## Combining Queries (One slower query is better than two slightly faster queries)
+
+---
+
+class: split-50
+
+.column[
+# Don't query in a loop
+```python
+def query_in_a_loop():
+    rows = []
+    for film in films:
+        film_row = db(
+            db.film.title == film
+        ).select(
+            db.film.title,
+            db.film.description
+        ).first()
+        rows.append(film_row)
+    return rows
+```
+> _Execution time: 17.12254_
+]
+.column[
+<br><br><br><br><br><br><br>
+```python
+def query_belongs():
+    film_rows = db(
+        db.film.title.belongs(films)
+    ).select(
+        db.film.title,
+        db.film.description
+    ).first()
+    return film_rows
+```
+> _Execution time: 4.48374_
+]
+
+---
+
+class: center, middle
+
+# Efficient Retrieval
+## Avoiding Full Table Scans
+
+---
+
+class: center, middle
+
+# Efficient Retrieval
+## Define Reporting Requirements early
+
+---
+
+class: center, middle
+
+# Efficient Retrieval
+## Optimizations to the Database
+
+---
+
+# Indexes
+
+- Creating an index creates a new special lookup table and data structures that refers to the original table
+- Indexes can be created on any column (not only id!) but should only be created on columns that are frequently referenced in a query's WHERE clause and infrequently updated
+- Indexes speed up SELECTs (if used correctly), but can slow down INSERTs and UPDATEs
+- A doubly linked list is used to connect the index lookup table to the original table and a Binary Tree is used to quickly look up indexes
+
+---
+
+# Views 
+
+- Views are nothing more than a SQL statement stored in the DB, so there are no speed benefits in using them
+- Views instead allow us to store a common query and write permissions and business logic around it
+- Incorporating views into other queries can cause retrieval to be slow as it requires rerunning the stored SQL statement every time it is referenced
+
+---
+
+# References
+
+- Query Processing: https://www.geeksforgeeks.org/sql-query-processing/
+- SQL Performance and Planning: _The Art of SQL_ Stephane Faroult
+- The SQL Server Query Optimizer: https://hackernoon.com/how-does-the-sql-server-query-optimizer-works-47541e2205aa
+- Logical Query Processing Flow: https://www.itprotoday.com/sql-server/logical-query-processing-part-7-group-and-having
+- Background Image: <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by starline - www.freepik.com</a>
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.2.3/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({startOnLoad:true});
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
