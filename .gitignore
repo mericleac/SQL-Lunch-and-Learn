@@ -1,0 +1,4 @@
+venv
+*.table
+.idea
+.Rhistory
