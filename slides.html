@@ -157,6 +157,62 @@ def query_belongs():
 
 ---
 
+
+class: split-50
+
+.column[
+# Using subqueries
+```python
+def using_a_list_of_ids():
+  film_ids = [
+    row.film_id for row in 
+    db(
+      db.film.rental_rate < 1.0
+    ).select(
+        db.film.film_id,
+    )
+  ]
+
+  film_rows = db(
+    db.film.rental_rate
+    .belongs(film_ids)
+  ).select(
+    db.film.title,
+    db.film.description,
+    db.film.rental_rate,
+    orderby=db.film.rental_rate
+  )
+  return film_rows
+```
+> _Execution time: 19.86860_
+]
+.column[
+<br><br><br><br><br><br><br>
+```python
+def using_a_subquery():
+    sub_query = db(
+      db.film.rental_rate < 1.0
+    )._select(
+      db.film.rental_rate
+    )
+
+    film_rows = db(
+      db.film.rental_rate
+      .belongs(sub_query)
+    ).select(
+      db.film.title,
+      db.film.description,
+      db.film.rental_rate,
+      orderby=db.film.rental_rate
+    )
+
+    return film_rows
+```
+> _Execution time: 17.17342_
+]
+
+---
+
 class: center, middle
 
 # Efficient Retrieval
@@ -182,8 +238,11 @@ class: center, middle
 
 - Creating an index creates a new special lookup table and data structures that refers to the original table
 - Indexes can be created on any column (not only id!) but should only be created on columns that are frequently referenced in a query's WHERE clause and infrequently updated
-- Indexes speed up SELECTs (if used correctly), but can slow down INSERTs and UPDATEs
-- A doubly linked list is used to connect the index lookup table to the original table and a Binary Tree is used to quickly look up indexes
+- There are clustered and non clustered indexes, they are both represented with a Binary Tree structure
+- A clustered index stores the entire row and all the data (affects the sorting of the table as a whole) while a non clustered index stores a pointer to the data
+- A table can only have one clustered index (often the primary key)
+- Clustered indexes can speed up SELECTs (if used correctly), but can slow down INSERTs and UPDATEs (mostly clustered)
+- Non clustered indexes can also speed up SELECTs (if used correctly) but add overhead since they are their own data structure that must be stored
 
 ---
 
@@ -202,6 +261,8 @@ class: center, middle
 - The SQL Server Query Optimizer: https://hackernoon.com/how-does-the-sql-server-query-optimizer-works-47541e2205aa
 - Logical Query Processing Flow: https://www.itprotoday.com/sql-server/logical-query-processing-part-7-group-and-having
 - Background Image: <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by starline - www.freepik.com</a>
+- Clustered vs Non Clustered Indexes: https://www.youtube.com/watch?v=xeoLwQmTO4o&feature=youtu.be
+- SQL topics by level: https://softwareengineering.stackexchange.com/questions/181651/are-these-sql-concepts-for-beginners-intermediate-or-advanced-developers
 
     </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
