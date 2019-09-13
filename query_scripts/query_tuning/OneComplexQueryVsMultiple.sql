@@ -59,7 +59,7 @@ SHOW STATUS LIKE 'Last_Query_Cost';
 
 SELECT *
 FROM address
-WHERE store_id in (1, 2);
+WHERE address_id in (1, 2);
 SHOW STATUS LIKE 'Last_Query_Cost';
 
 -- Complex Query = 6.199000
@@ -92,7 +92,7 @@ EXPLAIN SELECT *
 FROM film
 WHERE length < 61;
 
-EXPAIN SELECT *
+EXPLAIN SELECT *
 FROM film
 WHERE length >= 61 AND length <= 79;
 

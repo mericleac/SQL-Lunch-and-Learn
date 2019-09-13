@@ -6,7 +6,7 @@ FROM film f
 WHERE f.film_id IN (
     SELECT i.film_id
     FROM inventory i
-    WHERE inventory < 555
+    WHERE inventory_id < 555
 );
 
 EXPLAIN SELECT *
@@ -14,7 +14,7 @@ FROM film f
 WHERE f.film_id IN (
     SELECT i.film_id
     FROM inventory i
-    WHERE inventory < 555
+    WHERE inventory_id < 555
 );
 SHOW STATUS LIKE 'Last_Query_Cost';
 
@@ -30,7 +30,7 @@ WHERE EXISTS (
     AND i.film_id = f.film_id
 );
 
-EXPLIAN SELECT *
+EXPLAIN SELECT *
 FROM film f
 WHERE EXISTS (
     SELECT i.film_id
@@ -46,7 +46,7 @@ FROM film f
 INNER JOIN inventory i ON i.film_id = f.film_id
 WHERE inventory_id < 555;
 
-EXPALIN SELECT DISTINCT f.*
+EXPLAIN SELECT DISTINCT f.*
 FROM film f
 INNER JOIN inventory i ON i.film_id = f.film_id
 WHERE inventory_id < 555;
@@ -60,7 +60,7 @@ CREATE TABLE `filmcopy` (
     `description` text,
     `release_year` year(4) DEFAULT NULL,
     `language_id` tinyint(3) unsigned NOT NULL,
-    `originial_language_id` tinyint(3) unsigned DEFAULT NULL,
+    `original_language_id` tinyint(3) unsigned DEFAULT NULL,
     `rental_duration` tinyint(3) unsigned NOT NULL DEFAULT '3',
     `rental_rate` decimal(4, 2) NOT NULL DEFAULT '4.99',
     `length` smallint(5) unsigned DEFAULT NULL,
@@ -97,12 +97,12 @@ BEGIN
                 FROM inventory i
                 WHERE inventory_id < 555
             );
-        ITERATE label1;
-    END IF;
-    LEAVE label1;
-END LOOP lable1;
+			ITERATE label1;
+		END IF;
+		LEAVE label1;
+	END LOOP label1;
 END//
-delimiter
+delimiter ;
 
 delimiter //
 CREATE PROCEDURE ExistsQuery(p1 INT)
@@ -135,9 +135,9 @@ BEGIN
         ITERATE label1;
     END IF;
     LEAVE label1;
-END LOOP lable1;
+END LOOP label1;
 END//
-delimiter
+delimiter ;
 
 delimiter //
 CREATE PROCEDURE JoinQuery(p1 INT)
@@ -166,9 +166,9 @@ BEGIN
         ITERATE label1;
     END IF;
     LEAVE label1;
-END LOOP lable1;
+END LOOP label1;
 END//
-delimiter
+delimiter ;
 
 -- Test query loops
 CALL SubQuery(1000);
