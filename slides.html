@@ -67,18 +67,28 @@ class: center, middle
 
 # Query Processing
 
+## Client Side 
 1. Define Reporting Requirements
 > What data is required?
 2. SQL Query
 > _Declare_ what is needed
-3. Parser/Translator
-> Any syntax errors would be caught in this stage, also does Name resolutions, Type derivation, and aggregate binding
-4. Database Optimizer
-> The Optimizer generates several possible plans and chooses the best one using an internal algorithm
+
+---
+## Server Side
+<ol start="3">
+  <li>Query Cache</li>
+    If the query has appeared before and the same execution plan can be used, SQL will use the cached plan to return the results
+  <li>Parser/Translator</li>
+    Any syntax errors would be caught in this stage, also does Name resolutions, Type derivation, and aggregate binding
+  <li>Preprocessor</li>
+    Checks things like making sure the table, columns, functions exist
+  <li>Database Optimizer</li>
+    The Optimizer generates several possible plans and chooses the best one using an internal algorithm
+</ol>
 
 ---
 
-<ol start="5">
+<ol start="7">
     <li>Implementation (Execution Plan)</li>
 </ol>
 > The least expensive plan (considering I/O, CPU, and memory) is executed
@@ -93,12 +103,20 @@ class: center, middle
   graph LR
       subgraph SQL-engine-side
       C{Parser/<br>Translator}-->D
-      D{Optimizer}-->E
-      E{Execution<br>Plan}-->F{Execution<br>Engine}
+      D{Preprocessor}-->E
+      E{Optimizer}-->F
+      F{Execution<br>Plan}-->G{Execution<br>Engine}
       end
 </div>
 
 > The SQL Query describes _what_ should be retrieved, the optimizer will generate _how_ it should be retrieved
+
+---
+
+# The Optimizer
+
+The optimizer writes and tests different execution plans before choosing one based on internal statistics.
+The optimizer attempts to minimize the cost of the query by performing a cost-based analysis on the generated plans.
 
 ---
 
@@ -110,8 +128,17 @@ The parts of a select statement are:
 4. HAVING: filtering by conditions on that grouping
 5. SELECT: Choosing which columns to return
 6. ORDER BY: Sorting for returned entries
+7. LIMIT: How many rows should be returned
 > This is the logical query processing flow and the order in which the server interprets any SELECT statement
-
+```SQL
+SELECT [column(s)]
+FROM [table(s)]
+WHERE [condition(s)]
+GROUBY [grouping(s)]
+HAVING [group condition(s)]
+ORDERBY [column(s)]
+LIMIT [number of rows];
+```
 ---
 
 class: center, middle
