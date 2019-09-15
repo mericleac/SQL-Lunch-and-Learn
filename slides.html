@@ -139,12 +139,49 @@ HAVING [group condition(s)]
 ORDERBY [column(s)]
 LIMIT [number of rows];
 ```
+
 ---
 
 class: center, middle
 
 # Efficient Retrieval
-## Combining Queries (One slower query is better than two slightly faster queries)
+## Define Reporting Requirements early
+
+---
+
+class: split-50
+
+.column[
+# Don't use select star
+```python
+def select_star():
+    film_rows = db(
+      db.film.film_id > 0
+    ).select()
+    return film_rows
+```
+> _Execution time: 32.16939_
+]
+.column[
+<br><br><br><br><br><br>
+```python
+def specific_select():
+    film_rows = db(
+      db.film.film_id > 0
+    ).select(
+      db.film.title, 
+      db.film.description
+    )
+    return film_rows
+```
+> _Execution time: 3.10000_
+]
+---
+
+class: center, middle
+
+# Efficient Retrieval
+## Combining Queries (One slower query is usually better than more slightly faster queries)
 
 ---
 
@@ -237,20 +274,6 @@ def using_a_subquery():
 ```
 > _Execution time: 17.17342_
 ]
-
----
-
-class: center, middle
-
-# Efficient Retrieval
-## Avoiding Full Table Scans
-
----
-
-class: center, middle
-
-# Efficient Retrieval
-## Define Reporting Requirements early
 
 ---
 
