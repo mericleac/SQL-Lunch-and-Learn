@@ -25,8 +25,8 @@ FROM film_category
 WHERE film_id = 10;
 SHOW STATUS LIKE 'Last_Query_Cost';
 
--- Complex Query = 10.799000
--- Multiple Queries = 2.39900 + 2.39900 + 2.39900 = 7.197000 
+-- Complex Query = 
+-- Multiple Queries = 
 
 -- Remember that things like connection to the MySQL server 
 -- and finding the best execution path must happen for every query
